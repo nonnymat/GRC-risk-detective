@@ -1,0 +1,119 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GRC Risk Detective</title>
+<style>
+:root{color-scheme:dark;--bg:#091321;--card:#132239;--line:#2b405c;--mint:#65e6be;--muted:#b4c3d8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#edf5ff;font:16px/1.6 system-ui,Arial,sans-serif}
+main{max-width:850px;margin:auto;padding:24px 16px 50px}
+header{padding:24px 0}header small{color:var(--mint);font-weight:bold;letter-spacing:2px}
+h1{font-size:clamp(2.3rem,7vw,4rem);line-height:1.05;margin:10px 0}
+p{color:var(--muted)}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin:15px 0}
+.stats{display:flex;gap:10px;flex-wrap:wrap}.stat{flex:1;min-width:100px;background:#0b1829;border-radius:12px;padding:12px}
+.stat small{display:block;color:var(--muted)}.stat strong{font-size:1.4rem}
+.tag{color:var(--mint);font-size:.8rem;font-weight:bold;letter-spacing:1px}
+button{font:inherit;cursor:pointer;border-radius:11px;padding:12px 15px;font-weight:bold}
+.primary{background:var(--mint);color:#06241b;border:0}.secondary,.answer{background:#1b2e49;color:#edf5ff;border:1px solid var(--line)}
+button:disabled{cursor:default;opacity:.65}.answers{display:grid;gap:10px;margin-top:15px}
+.answer{text-align:left;line-height:1.45}.answer:hover:not(:disabled){border-color:var(--mint)}
+.answer.correct{border-color:var(--mint);background:#104033}.answer.wrong{border-color:#ff8290;background:#42242f}
+.progress{height:6px;background:#2b405c;border-radius:20px;margin:18px 0}.progress div{height:100%;background:var(--mint);width:0;border-radius:20px}
+.feedback{padding:14px;margin-top:15px;border:1px solid var(--line);border-radius:12px;background:#0b1829}
+.hidden{display:none!important}.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
+footer{font-size:.8rem;color:var(--muted);margin-top:25px}
+</style>
+</head>
+<body>
+<main>
+<header>
+<small>THE COMPLIANCE CHALLENGE</small>
+<h1>GRC Risk<br><span style="color:var(--mint)">Detective</span></h1>
+<p>Spot the risk. Choose the control. Protect the business. Practise real-world Governance, Risk and Compliance decisions.</p>
+<button class="primary" id="start">Start investigation →</button>
+</header>
+
+<div class="stats">
+<div class="stat"><small>Score</small><strong id="score">0</strong></div>
+<div class="stat"><small>Case</small><strong id="round">0/8</strong></div>
+<div class="stat"><small>Streak 🔥</small><strong id="streak">0</strong></div>
+</div>
+
+<section class="card" id="game">
+<div id="welcome">
+<div class="tag">YOUR MISSION</div>
+<h2>Think like a GRC analyst</h2>
+<p>Investigate eight workplace scenarios covering access control, third-party risk, incidents, audit evidence, and compliance.</p>
+<p>Choose the strongest response. Read each explanation to learn why the decision matters.</p>
+</div>
+<div id="play" class="hidden">
+<div class="tag" id="category"></div>
+<div class="progress"><div id="bar"></div></div>
+<h2 id="title"></h2>
+<p id="story"></p>
+<h3 id="question"></h3>
+<div class="answers" id="answers"></div>
+<div class="feedback hidden" id="feedback" aria-live="polite"></div>
+<div class="row"><button class="primary hidden" id="next">Next case →</button></div>
+</div>
+<div id="results" class="hidden">
+<div class="tag">INVESTIGATION COMPLETE</div>
+<h2 id="rank"></h2>
+<p id="summary"></p>
+<div class="stats">
+<div class="stat"><small>Final score</small><strong id="finalScore"></strong></div>
+<div class="stat"><small>Accuracy</small><strong id="accuracy"></strong></div>
+<div class="stat"><small>Correct answers</small><strong id="correct"></strong></div>
+</div>
+<h3>Lessons to review</h3>
+<div id="lessons"></div>
+<div class="row">
+<button class="primary" id="again">Play again</button>
+<button class="secondary" id="share">Copy LinkedIn achievement</button>
+</div>
+<p id="shareMessage"></p>
+</div>
+</section>
+
+<section class="card">
+<div class="tag">TRAINING TRACKS</div>
+<h2>What you'll practise</h2>
+<p>🔐 Access control and least privilege</p>
+<p>🤝 Third-party risk assessment</p>
+<p>🚨 Incident reporting and escalation</p>
+<p>📊 Risk registers and treatment plans</p>
+<p>📘 Policy governance and compliance</p>
+<p>🧾 Audit evidence and remediation tracking</p>
+</section>
+<footer>GRC Risk Detective — educational prototype. Follow your organisation's approved procedures. This game is not legal, audit, or regulatory advice.</footer>
+</main>
+<script>
+const cases=[
+{cat:"ACCESS CONTROL",title:"The Over-Privileged Employee",story:"A finance analyst can access customer records and administrator settings, although their job only requires invoice processing.",q:"What is the best control improvement?",o:["Give everyone identical access.","Apply least privilege and role-based access, then review permissions.","Wait for an incident.","Disable the entire department."],a:1,why:"Least privilege limits access to what each person needs. Role-based permissions and regular reviews reduce unnecessary exposure.",lesson:"Least privilege and access reviews"},
+{cat:"THIRD-PARTY RISK",title:"The Unverified Vendor",story:"A vendor will process sensitive customer information, but your company has collected no security evidence or reviewed the relevant contract terms.",q:"What should you recommend?",o:["Approve it because the vendor is well known.","Assess the vendor's risk and review proportionate security evidence before approval.","Accept a verbal promise.","Ignore it because the vendor is external."],a:1,why:"Vendor checks should reflect data sensitivity and service criticality. Review security evidence, contract protections, and remediation needs.",lesson:"Risk-based third-party due diligence"},
+{cat:"INCIDENT RESPONSE",title:"The Suspicious Email",story:"An employee clicked a suspicious link and entered their password. The scale of any compromise is not yet known.",q:"What is the strongest next step?",o:["Delete all reports.","Escalate through the incident process, secure the account, and preserve evidence.","Announce that the entire company is breached.","Wait a week."],a:1,why:"Prompt escalation allows the response team to secure credentials, investigate indicators, and preserve evidence.",lesson:"Incident escalation and evidence preservation"},
+{cat:"RISK ASSESSMENT",title:"The Incomplete Risk Register",story:"A critical-system outage is listed as a risk, but the record has no business impact, owner, controls, or treatment plan.",q:"What would improve the entry?",o:["Delete the risk.","Document likelihood and impact, assign an owner, record controls, and define treatment actions.","Rate every risk low.","Remove the owner field."],a:1,why:"A useful risk register supports decisions with clear ownership, ratings, controls, treatment actions, and due dates.",lesson:"Actionable risk-register documentation"},
+{cat:"POLICY & COMPLIANCE",title:"The Forgotten Policy",story:"An information security policy exists, but employees have not been trained and no one is responsible for reviewing it.",q:"What should the company do?",o:["Leave it in a folder.","Assign ownership, communicate the policy, train relevant staff, retain evidence, and review it periodically.","Delete it.","Train employees only after a breach."],a:1,why:"A policy document alone does not demonstrate effective implementation. Ownership, communication, training, and review matter.",lesson:"Policy governance and implementation evidence"},
+{cat:"AUDIT EVIDENCE",title:"The Missing Records",story:"A control owner claims access is reviewed quarterly but cannot provide records showing the reviews took place.",q:"What is the appropriate audit response?",o:["Accept the claim without testing.","Document the evidence gap, seek corroboration, and assess only what can be substantiated.","Create and backdate records.","Ignore the gap."],a:1,why:"Audit conclusions should be based on reliable evidence. Document limitations and determine whether the control actually operated.",lesson:"Evidence-based audit testing"},
+{cat:"DATA PROTECTION",title:"The Spreadsheet Shortcut",story:"An employee wants to send customer personal data to a personal email account to finish work at home.",q:"What is the best response?",o:["Allow it if they delete it later.","Use approved secure tools and follow data-handling policy; escalate any exposure.","Create a public sharing link.","Assume customer data needs no protection."],a:1,why:"Use approved channels and appropriate access and protection controls. If data was already exposed, follow incident and privacy escalation procedures.",lesson:"Safe data handling and privacy escalation"},
+{cat:"CONTROL MONITORING",title:"The Overdue Finding",story:"A logging control finding is overdue by 90 days. No one has verified whether the fix was implemented.",q:"What should happen next?",o:["Close the finding because its deadline passed.","Update the tracker, contact the owner, escalate as appropriate, and validate remediation with evidence.","Keep moving the deadline without explanation.","Assume it was fixed."],a:1,why:"Track owners, actions, and due dates. Escalate overdue risks through governance channels and verify the fix before closure.",lesson:"Remediation tracking and validation"}
+];
+const $=id=>document.getElementById(id);
+let order=[],i=0,score=0,streak=0,correct=0,chosen=false,history=[];
+function shuffle(a){for(let n=a.length-1;n>0;n--){let j=Math.floor(Math.random()*(n+1));[a[n],a[j]]=[a[j],a[n]]}return a}
+function update(){ $("score").textContent=score;$("round").textContent=history.length+"/8";$("streak").textContent=streak}
+function start(){order=shuffle(cases.map((_,i)=>i));i=0;score=0;streak=0;correct=0;chosen=false;history=[];update();$("welcome").classList.add("hidden");$("results").classList.add("hidden");$("play").classList.remove("hidden");render()}
+function render(){chosen=false;let c=cases[order[i]];$("category").textContent=c.cat;$("title").textContent=c.title;$("story").textContent=c.story;$("question").textContent=c.q;$("bar").style.width=(i/8*100)+"%";$("feedback").classList.add("hidden");$("next").classList.add("hidden");$("next").textContent=i===7?"View report →":"Next case →";$("answers").innerHTML="";
+c.o.forEach((text,n)=>{let b=document.createElement("button");b.className="answer";b.textContent=String.fromCharCode(65+n)+". "+text;b.onclick=()=>choose(n,b);$("answers").appendChild(b)})}
+function choose(n,button){if(chosen)return;chosen=true;let c=cases[order[i]],buttons=[...$("answers").children];buttons.forEach((b,j)=>{b.disabled=true;if(j===c.a)b.classList.add("correct")});let earned=0;
+if(n===c.a){earned=100+Math.min(streak*10,30);score+=earned;correct++;streak++;button.classList.add("correct");$("feedback").className="feedback good";$("feedback").innerHTML="<strong>Correct! +"+earned+" points</strong>"+c.why}else{streak=0;button.classList.add("wrong");$("feedback").className="feedback";$("feedback").innerHTML="<strong>Not quite — here's why.</strong>"+c.why}
+history.push({title:c.title,lesson:c.lesson,ok:n===c.a});update();$("next").classList.remove("hidden")}
+function next(){if(!chosen)return;i++;if(i>=8){finish();return}render()}
+function finish(){$("play").classList.add("hidden");$("results").classList.remove("hidden");$("bar").style.width="100%";let pct=Math.round(correct/8*100),rank=pct>=88?"GRC Champion":pct>=63?"Risk Analyst in Training":pct>=38?"Risk Detective":"GRC Apprentice";$("rank").textContent=rank;$("summary").textContent=pct>=88?"Excellent work. You made strong, evidence-based decisions.":pct>=63?"Good foundation. Review the lessons below and keep practising.":"Every case is a learning opportunity. Review the explanations and play again."; $("finalScore").textContent=score;$("accuracy").textContent=pct+"%";$("correct").textContent=correct+"/8";$("lessons").innerHTML=history.map(x=>"<p>"+(x.ok?"✓ ":"↻ ")+x.title+" — "+x.lesson+"</p>").join("")}
+$("start").onclick=start;$("next").onclick=next;$("again").onclick=start;
+$("share").onclick=async()=>{let text="I completed GRC Risk Detective! Score: "+score+" | Accuracy: "+Math.round(correct/8*100)+"% | Rank: "+$("rank").textContent+". Practising Governance, Risk & Compliance through scenario-based learning. #GRC #Cybersecurity #ITRisk";try{await navigator.clipboard.writeText(text);$("shareMessage").textContent="Achievement copied. Paste it into LinkedIn!"}catch(e){window.prompt("Copy your achievement:",text)}};
+</script>
+</body>
+</html>
